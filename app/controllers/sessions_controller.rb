@@ -15,9 +15,9 @@ class SessionsController < Devise::SessionsController
     end
   end
 
-	private
+  private
 
-	def sessions_params
+  def sessions_params
     params.require(:sign_in).permit(:email, :password)
   end
 
@@ -25,7 +25,7 @@ class SessionsController < Devise::SessionsController
     render json: resource
   end
 
-	def respond_to_on_destroy
+  def respond_to_on_destroy
     head :ok
-	end
+  end
 end

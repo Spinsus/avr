@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class RecipeStepsController < ApplicationController
-	private
+  private
 
-	def recipe_step_params
+  def recipe_step_params
     params.require(:recipe_step).permit(:title, :description, :recipe_id)
-	end
+  end
 end

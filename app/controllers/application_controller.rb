@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::API
   include ApiTokenAuthorizable
 
-	before_action :set_resource, only: [:show, :destroy, :update]
+  before_action :set_resource, only: [:show, :destroy, :update]
 
   respond_to :json
 
@@ -11,9 +11,9 @@ class ApplicationController < ActionController::API
 
   def index
     resources = base_index_query.where(query_params)
-    														.order(order_args)
-    														.page(page_params[:page])
-    														.per(page_params[:page_size])
+                                .order(order_args)
+                                .page(page_params[:page])
+                                .per(page_params[:page_size])
 
     instance_variable_set(pluralized_resource, resources)
     render_collection
@@ -45,11 +45,11 @@ class ApplicationController < ActionController::API
     head :no_content
   end
 
-	private
+  private
 
   def not_found
     render json: {
-    	message: "Could not find #{resource_name.classify} with ID #{params[:id]}"
+      message: "Could not find #{resource_name.classify} with ID #{params[:id]}"
     },
     status: :not_found
   end

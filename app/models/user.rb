@@ -8,10 +8,10 @@ class User < ApplicationRecord
          :jwt_authenticatable, jwt_revocation_strategy: self
 
   attr_encrypted :current_sign_in_ip,
-  				 key: Figaro.env.user_current_sign_in_ip_key
+           key: Figaro.env.user_current_sign_in_ip_key
 
   attr_encrypted :last_sign_in_ip,
-  				 key: Figaro.env.user_last_sign_in_ip_key
+           key: Figaro.env.user_last_sign_in_ip_key
 
   has_many :recipes
 end
