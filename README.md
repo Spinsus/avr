@@ -1,9 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+AVR Code Challenge - Recipe API
 
-Things you may want to cover:
+To get started:
+
+Make sure you are running Ruby 2.6.3
+
+```bundle install```
+
 
 * Ruby version
 

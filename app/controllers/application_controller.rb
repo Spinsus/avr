@@ -3,7 +3,7 @@
 class ApplicationController < ActionController::API
   include ApiTokenAuthorizable
 
-	before_action :set_resource, except: [:index, :create]
+	before_action :set_resource, only: [:show, :destroy, :update]
 
   respond_to :json
 
@@ -11,7 +11,9 @@ class ApplicationController < ActionController::API
 
   def index
     resources = base_index_query.where(query_params)
-    resources = resources.order(order_args).page(page_params[:page]).per(page_params[:page_size]) if resources.size > 1
+    														.order(order_args)
+    														.page(page_params[:page])
+    														.per(page_params[:page_size])
 
     instance_variable_set(pluralized_resource, resources)
     render_collection
@@ -30,11 +32,6 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def destroy
-    get_resource.destroy
-    head :no_content
-  end
-
   def update
     if get_resource.update(resource_params)
       render json: get_resource
@@ -43,11 +40,16 @@ class ApplicationController < ActionController::API
     end
   end
 
+  def destroy
+    get_resource.destroy
+    head :no_content
+  end
+
 	private
 
   def not_found
     render json: {
-    	message: "Could not find #{resource_name.capitalize} with ID #{params[:id]}"
+    	message: "Could not find #{resource_name.classify} with ID #{params[:id]}"
     },
     status: :not_found
   end
@@ -85,9 +87,9 @@ class ApplicationController < ActionController::API
     resources = instance_variable_get(pluralized_resource)
 
     render json: {
-      page: resources.respond_to?(:current_page) ? resources.current_page : 1,
-      total_pages: resources.respond_to?(:total_pages) ? resources.total_pages : 1,
-      page_size: resources.respond_to?(:size) ? resources.size : 1,
+      page: resources.current_page,
+      total_pages: resources.total_pages,
+      page_size: resources.size,
       "#{resource_name.pluralize}": resources.as_json
     }
   end
