@@ -10,12 +10,11 @@ class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
 
   def index
-    resources = base_index_query.where(query_params)
-                                .order(order_args)
-                                .page(page_params[:page])
-                                .per(page_params[:page_size])
+    collection = resource_class.where(query_params)
+                              .page(page_params[:page])
+                              .per(page_params[:page_size])
 
-    instance_variable_set(pluralized_resource, resources)
+    instance_variable_set(pluralized_resource, collection)
     render_collection
   end
 
@@ -25,6 +24,7 @@ class ApplicationController < ActionController::API
 
   def create
     set_resource(resource_class.new(resource_params))
+
     if get_resource.save
       render json: get_resource, status: :created
     else
@@ -54,10 +54,6 @@ class ApplicationController < ActionController::API
     status: :not_found
   end
 
-  def model_attributes
-    resource_class.attribute_names.map{ |s| s.to_sym } - [:created_at, :updated_at]
-  end
-
   def resource_params
     @resource_params ||= self.send("#{resource_name}_params")
   end
@@ -79,18 +75,14 @@ class ApplicationController < ActionController::API
     @resource_class ||= resource_name.classify.constantize
   end
 
-  def base_index_query
-    resource_class
-  end
-
   def render_collection
-    resources = instance_variable_get(pluralized_resource)
+    collection = instance_variable_get(pluralized_resource)
 
     render json: {
-      page: resources.current_page,
-      total_pages: resources.total_pages,
-      page_size: resources.size,
-      "#{resource_name.pluralize}": resources.as_json
+      page: collection.current_page,
+      total_pages: collection.total_pages,
+      page_size: collection.size,
+      "#{resource_name.pluralize}": collection.as_json
     }
   end
 
@@ -100,10 +92,6 @@ class ApplicationController < ActionController::API
 
   def page_params
     params.permit(:page, :page_size)
-  end
-
-  def order_args
-    :created_at
   end
 
   def pluralized_resource

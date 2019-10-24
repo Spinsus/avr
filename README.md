@@ -27,7 +27,11 @@ bundle exec rails s
 
 ## Usage
 
-To create a new user, you will first need to obtain a JWT token using the default admin account. To do this, make a `POST` request to the `/login` endpoint with the user credentials supplied above from the seed file. This will return back a bearer token that can be added to the header of subsequent requests.
+To create a new user, you will first need to obtain a JWT token using the default admin account.
+
+To do this, make a `POST` request to the `/login` endpoint with the user credentials supplied above from the seed file.
+
+This will return back a bearer token that can be added to the header of subsequent requests, however, it expires after 24 hours (1 day).
 
 ## Token authentication with endpoints
 
