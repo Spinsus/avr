@@ -1,0 +1,14 @@
+default: &default
+  adapter: postgresql
+
+development:
+  <<: *default
+  database: avr_dev
+
+test:
+  <<: *default
+  database: avr_test
+
+production:
+  <<: *default
+  database: avr
